@@ -4,7 +4,7 @@
 The application is based from a [Go article](https://medium.com/@matiasvarela?p=cfd4e436faa3).
 Changed the app with some refactorings, and to make each component easier to understand.
 
-![alt text](https://reflectoring.io/assets/img/posts/spring-hexagonal/hexagonal-architecture.png "Ports and Adapters")
+![alt text](https://miro.medium.com/max/720/1*zDk8LCB2RLQUGv-jd-rStA.png "Ports and Adapters")
 
 ## Topics:
 1. [Summary](#summary)
