@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"hexagonal/src/adapters/http"
 	"hexagonal/src/adapters/repositories/memory_kvs"
 	"hexagonal/src/config/uuid"
-	"hexagonal/src/core/usecases"
+	"hexagonal/src/core/use_cases"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	gameRepositoryPort := memory_kvs.NewMemKVS()
-	gameUseCase := usecases.New(gameRepositoryPort, uuid.New())
+	gameUseCase := use_cases.New(gameRepositoryPort, uuid.New())
 	gameUsingHttp := http.NewHTTPHandler(gameUseCase)
 
 	router := gin.New()

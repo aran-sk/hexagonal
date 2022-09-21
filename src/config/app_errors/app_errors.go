@@ -1,4 +1,4 @@
-package apperrors
+package app_errors
 
 import (
 	"github.com/matiasvarela/errors"

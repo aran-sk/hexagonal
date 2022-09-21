@@ -1,14 +1,15 @@
 package tests
 
 import (
+	"hexagonal/src/config/app_errors"
+	"hexagonal/src/core/domain"
+	"hexagonal/src/core/use_cases"
+	"hexagonal/tests/mocks/mockups"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/matiasvarela/errors"
 	"github.com/stretchr/testify/assert"
-	"hexagonal/src/config/apperrors"
-	"hexagonal/src/core/domain"
-	"hexagonal/src/core/usecases"
-	"hexagonal/tests/mocks/mockups"
-	"testing"
 )
 
 type mocks struct {
@@ -63,17 +64,17 @@ func TestGet(t *testing.T) {
 		{
 			name: "Should return error - game not found",
 			args: args{id: "1001-1001-1001-1001"},
-			want: want{err: errors.New(apperrors.NotFound, nil, "game not found")},
+			want: want{err: errors.New(app_errors.NotFound, nil, "game not found")},
 			mocks: func(m mocks) {
-				m.gameRepository.EXPECT().Get("1001-1001-1001-1001").Return(domain.Game{}, errors.New(apperrors.NotFound, nil, ""))
+				m.gameRepository.EXPECT().Get("1001-1001-1001-1001").Return(domain.Game{}, errors.New(app_errors.NotFound, nil, ""))
 			},
 		},
 		{
 			name: "Should return error - get from repository fails",
 			args: args{id: "1001-1001-1001-1001"},
-			want: want{err: errors.New(apperrors.Internal, nil, "get game from repository has failed")},
+			want: want{err: errors.New(app_errors.Internal, nil, "get game from repository has failed")},
 			mocks: func(m mocks) {
-				m.gameRepository.EXPECT().Get("1001-1001-1001-1001").Return(domain.Game{}, errors.New(apperrors.Internal, nil, ""))
+				m.gameRepository.EXPECT().Get("1001-1001-1001-1001").Return(domain.Game{}, errors.New(app_errors.Internal, nil, ""))
 			},
 		},
 	}
@@ -89,7 +90,7 @@ func TestGet(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		service := usecases.New(m.gameRepository, m.uidGen)
+		service := use_cases.New(m.gameRepository, m.uidGen)
 
 		// Execute
 		result, err := service.Get(tt.args.id)
@@ -147,16 +148,16 @@ func TestCreate(t *testing.T) {
 		{
 			name: "Should return an error - create game into repository fails",
 			args: args{name: "mygame", size: 4, bombs: 2},
-			want: want{err: errors.New(apperrors.Internal, nil, "create game into repository has failed")},
+			want: want{err: errors.New(app_errors.Internal, nil, "create game into repository has failed")},
 			mocks: func(m mocks) {
 				m.uidGen.EXPECT().New().Return("1001")
-				m.gameRepository.EXPECT().Save(gomock.Any()).Return(errors.New(apperrors.Internal, nil, ""))
+				m.gameRepository.EXPECT().Save(gomock.Any()).Return(errors.New(app_errors.Internal, nil, ""))
 			},
 		},
 		{
 			name:  "Should return an error - invalid bombs number",
 			args:  args{name: "mygame", size: 4, bombs: 40},
-			want:  want{err: errors.New(apperrors.InvalidInput, nil, "the number of bombs is too high")},
+			want:  want{err: errors.New(app_errors.InvalidInput, nil, "the number of bombs is too high")},
 			mocks: func(m mocks) {},
 		},
 	}
@@ -173,7 +174,7 @@ func TestCreate(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		gameUseCase := usecases.New(m.gameRepository, m.uidGen)
+		gameUseCase := use_cases.New(m.gameRepository, m.uidGen)
 
 		// Execute
 		gameResult, err := gameUseCase.Create(tt.args.name, tt.args.size, tt.args.bombs)
@@ -253,23 +254,23 @@ func TestReveal(t *testing.T) {
 		{
 			name: "Should return an error - game not found",
 			args: args{id: "1001", row: 2, col: 2},
-			want: want{err: errors.New(apperrors.NotFound, nil, "game not found")},
+			want: want{err: errors.New(app_errors.NotFound, nil, "game not found")},
 			mocks: func(m mocks) {
-				m.gameRepository.EXPECT().Get("1001").Return(domain.Game{}, errors.New(apperrors.NotFound, nil, ""))
+				m.gameRepository.EXPECT().Get("1001").Return(domain.Game{}, errors.New(app_errors.NotFound, nil, ""))
 			},
 		},
 		{
 			name: "Should return an error - fail to get the game from repository",
 			args: args{id: "1001", row: 2, col: 2},
-			want: want{err: errors.New(apperrors.Internal, nil, "get game from repository has failed")},
+			want: want{err: errors.New(app_errors.Internal, nil, "get game from repository has failed")},
 			mocks: func(m mocks) {
-				m.gameRepository.EXPECT().Get("1001").Return(domain.Game{}, errors.New(apperrors.Internal, nil, ""))
+				m.gameRepository.EXPECT().Get("1001").Return(domain.Game{}, errors.New(app_errors.Internal, nil, ""))
 			},
 		},
 		{
 			name: "Should return an error - invalid position",
 			args: args{id: "1001", row: 20, col: 2},
-			want: want{err: errors.New(apperrors.InvalidInput, nil, "invalid position")},
+			want: want{err: errors.New(app_errors.InvalidInput, nil, "invalid position")},
 			mocks: func(m mocks) {
 				game := easymockGame("1001", "mygame", 4, "", false, []pos{{1, 1}}, []pos{})
 
@@ -279,7 +280,7 @@ func TestReveal(t *testing.T) {
 		{
 			name: "Should return an error - gameis over",
 			args: args{id: "1001", row: 2, col: 2},
-			want: want{err: errors.New(apperrors.IllegalOperation, nil, "game is over")},
+			want: want{err: errors.New(app_errors.IllegalOperation, nil, "game is over")},
 			mocks: func(m mocks) {
 				game := easymockGame("1001", "mygame", 4, domain.GameStateLost, false, []pos{{1, 1}}, []pos{})
 
@@ -289,13 +290,13 @@ func TestReveal(t *testing.T) {
 		{
 			name: "Should return an error - save game has fail",
 			args: args{id: "1001", row: 2, col: 2},
-			want: want{err: errors.New(apperrors.Internal, nil, "update game into repository has failed")},
+			want: want{err: errors.New(app_errors.Internal, nil, "update game into repository has failed")},
 			mocks: func(m mocks) {
 				game := easymockGame("1001", "mygame", 4, "", false, []pos{{1, 1}}, []pos{})
 				gameToSave := easymockGame("1001", "mygame", 4, "", false, []pos{{1, 1}}, []pos{{2, 2}})
 
 				m.gameRepository.EXPECT().Get("1001").Return(game, nil)
-				m.gameRepository.EXPECT().Save(gameToSave).Return(errors.New(apperrors.Internal, nil, ""))
+				m.gameRepository.EXPECT().Save(gameToSave).Return(errors.New(app_errors.Internal, nil, ""))
 			},
 		},
 	}
@@ -312,7 +313,7 @@ func TestReveal(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		gameUseCase := usecases.New(m.gameRepository, m.uidGen)
+		gameUseCase := use_cases.New(m.gameRepository, m.uidGen)
 
 		// Execute
 		gameResult, err := gameUseCase.Reveal(tt.args.id, tt.args.row, tt.args.col)
