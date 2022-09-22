@@ -1,4 +1,4 @@
-package memory_kvs
+package kvs
 
 import (
 	"encoding/json"
@@ -9,17 +9,17 @@ import (
 	"github.com/matiasvarela/errors"
 )
 
-type MemoryKVS struct {
+type KeyValueStore struct {
 	kvs map[string][]byte
 }
 
-func NewMemKVS() *MemoryKVS {
-	return &MemoryKVS{
+func New() *KeyValueStore {
+	return &KeyValueStore{
 		kvs: map[string][]byte{},
 	}
 }
 
-func (repo *MemoryKVS) Get(id string) (domain.Game, error) {
+func (repo *KeyValueStore) Get(id string) (domain.Game, error) {
 
 	if value, ok := repo.kvs[id]; ok {
 		game := domain.Game{}
@@ -34,7 +34,7 @@ func (repo *MemoryKVS) Get(id string) (domain.Game, error) {
 	return domain.Game{}, errors.New(app_errors.NotFound, nil, "game not found in kvs")
 }
 
-func (repo *MemoryKVS) Save(game domain.Game) error {
+func (repo *KeyValueStore) Save(game domain.Game) error {
 	bytes, err := json.Marshal(game)
 	if err != nil {
 		return errors.New(app_errors.InvalidInput, err, messages.GameMarshalingFailed)

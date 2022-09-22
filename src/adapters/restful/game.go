@@ -1,22 +1,23 @@
-package http
+package restful
 
 import (
-	"github.com/gin-gonic/gin"
 	"hexagonal/src/core/dto"
 	"hexagonal/src/core/ports"
+
+	"github.com/gin-gonic/gin"
 )
 
-type http struct {
+type restful struct {
 	gamePort ports.GamePort
 }
 
-func NewHTTPHandler(gameUseCase ports.GamePort) *http {
-	return &http{
+func New(gameUseCase ports.GamePort) *restful {
+	return &restful{
 		gamePort: gameUseCase,
 	}
 }
 
-func (handler *http) Get(c *gin.Context) {
+func (handler *restful) Get(c *gin.Context) {
 	game, err := handler.gamePort.Get(c.Param("id"))
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
@@ -26,7 +27,7 @@ func (handler *http) Get(c *gin.Context) {
 	c.JSON(200, game)
 }
 
-func (handler *http) Create(c *gin.Context) {
+func (handler *restful) Create(c *gin.Context) {
 	body := dto.BodyCreate{}
 	c.BindJSON(&body)
 
@@ -39,7 +40,7 @@ func (handler *http) Create(c *gin.Context) {
 	c.JSON(200, dto.BuildResponseCreate(game))
 }
 
-func (handler *http) RevealCell(c *gin.Context) {
+func (handler *restful) RevealCell(c *gin.Context) {
 	body := dto.BodyRevealCell{}
 	c.BindJSON(&body)
 

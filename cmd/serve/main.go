@@ -1,9 +1,8 @@
 package main
 
 import (
-	"hexagonal/src/adapters/health_check"
-	"hexagonal/src/adapters/http"
-	"hexagonal/src/adapters/repositories/memory_kvs"
+	"hexagonal/src/adapters/repositories/kvs"
+	"hexagonal/src/adapters/restful"
 	"hexagonal/src/config/uuid"
 	"hexagonal/src/core/use_cases"
 	"log"
@@ -15,15 +14,15 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/healthcheck", health_check.HealthCheckHandler)
+	router.GET("/healthcheck", restful.HealthCheckHandler)
 
 	api := router.Group("/api")
 	{
 		games := api.Group("/games")
 		{
-			gameRepositoryPort := memory_kvs.NewMemKVS()
+			gameRepositoryPort := kvs.New()
 			gameUseCase := use_cases.New(gameRepositoryPort, uuid.New())
-			gameUsingHttp := http.NewHTTPHandler(gameUseCase)
+			gameUsingHttp := restful.New(gameUseCase)
 
 			games.GET(":id", gameUsingHttp.Get)
 			games.POST("", gameUsingHttp.Create)
