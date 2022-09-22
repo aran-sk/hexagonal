@@ -41,7 +41,7 @@ func (board Board) fillWithBombs(bombs uint) {
 
 	rows := len(board)
 	cols := len(board[0])
-	positions := _getRandomPositions(rows*cols, bombs)
+	positions := getRandomPositions(rows*cols, bombs)
 
 	var row, col int
 	for _, pos := range positions {
@@ -91,16 +91,19 @@ func (board Board) IsCellEmpty() bool {
 	return false
 }
 
-// ··· Private Functions ··· //
-func _getRandomPositions(size int, n uint) []int {
+// random positions helper
+func getRandomPositions(size int, n uint) []int {
 	rand.Seed(time.Now().UnixNano())
 	p := rand.Perm(size)
 
 	var positions []int
 
-	for _, r := range p[:n] {
-		positions = append(positions, r)
-	}
+	// for _, r := range p[:n] {
+	// 	positions = append(positions, r)
+	// }
+
+	// code reviewed
+	positions = append(positions, p[:n]...)
 
 	return positions
 }
