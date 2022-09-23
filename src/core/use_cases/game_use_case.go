@@ -3,9 +3,9 @@ package use_cases
 import (
 	"hexagonal/src/config/app_errors"
 	"hexagonal/src/config/messages"
-	"hexagonal/src/config/uuid"
 	"hexagonal/src/core/domain"
 	"hexagonal/src/core/ports"
+	"hexagonal/src/helpers/uuid"
 
 	"github.com/matiasvarela/errors"
 )

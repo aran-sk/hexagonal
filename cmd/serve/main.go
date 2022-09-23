@@ -3,8 +3,8 @@ package main
 import (
 	"hexagonal/src/adapters/repositories/kvs"
 	"hexagonal/src/adapters/restful"
-	"hexagonal/src/config/uuid"
 	"hexagonal/src/core/use_cases"
+	"hexagonal/src/helpers/uuid"
 	"log"
 
 	"github.com/gin-gonic/gin"

@@ -1,8 +1,7 @@
 package domain
 
 import (
-	"math/rand"
-	"time"
+	"hexagonal/src/helpers/random"
 )
 
 const (
@@ -41,7 +40,7 @@ func (board Board) fillWithBombs(bombs uint) {
 
 	rows := len(board)
 	cols := len(board[0])
-	positions := getRandomPositions(rows*cols, bombs)
+	positions := random.GetRandomPositions(rows*cols, bombs)
 
 	var row, col int
 	for _, pos := range positions {
@@ -89,21 +88,4 @@ func (board Board) IsCellEmpty() bool {
 	}
 
 	return false
-}
-
-// random positions helper
-func getRandomPositions(size int, n uint) []int {
-	rand.Seed(time.Now().UnixNano())
-	p := rand.Perm(size)
-
-	var positions []int
-
-	// for _, r := range p[:n] {
-	// 	positions = append(positions, r)
-	// }
-
-	// code reviewed
-	positions = append(positions, p[:n]...)
-
-	return positions
 }
