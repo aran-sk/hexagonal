@@ -4,6 +4,8 @@ import (
 	"hexagonal/src/core/dto"
 	"hexagonal/src/core/ports"
 
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,38 +19,38 @@ func New(gameUseCase ports.GamePort) *restful {
 	}
 }
 
-func (handler *restful) Get(c *gin.Context) {
-	game, err := handler.gamePort.Get(c.Param("id"))
+func (handler *restful) Get(context *gin.Context) {
+	game, err := handler.gamePort.Get(context.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	c.JSON(200, game)
+	context.JSON(http.StatusOK, game)
 }
 
-func (handler *restful) Create(c *gin.Context) {
+func (handler *restful) Create(context *gin.Context) {
 	body := dto.BodyCreate{}
-	c.BindJSON(&body)
+	context.BindJSON(&body)
 
 	game, err := handler.gamePort.Create(body.Name, body.Size, body.Bombs)
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	c.JSON(200, dto.BuildResponseCreate(game))
+	context.JSON(http.StatusOK, dto.BuildResponseCreate(game))
 }
 
-func (handler *restful) RevealCell(c *gin.Context) {
+func (handler *restful) RevealCell(context *gin.Context) {
 	body := dto.BodyRevealCell{}
-	c.BindJSON(&body)
+	context.BindJSON(&body)
 
-	game, err := handler.gamePort.Reveal(c.Param("id"), body.Row, body.Col)
+	game, err := handler.gamePort.Reveal(context.Param("id"), body.Row, body.Col)
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	c.JSON(200, dto.BuildResponseRevealCell(game))
+	context.JSON(http.StatusOK, dto.BuildResponseRevealCell(game))
 }
