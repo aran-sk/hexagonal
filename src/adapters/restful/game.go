@@ -13,7 +13,7 @@ type gameHandler struct {
 	gamePort ports.GamePort
 }
 
-func New(gameUseCase ports.GamePort) *gameHandler {
+func NewGameHandler(gameUseCase ports.GamePort) *gameHandler {
 	return &gameHandler{
 		gamePort: gameUseCase,
 	}
@@ -30,7 +30,7 @@ func (handler *gameHandler) Get(context *gin.Context) {
 }
 
 func (handler *gameHandler) Create(context *gin.Context) {
-	body := dto.BodyCreate{}
+	body := dto.BodyGameCreate{}
 	context.BindJSON(&body)
 
 	game, err := handler.gamePort.Create(body.Name, body.Size, body.Bombs)
@@ -39,11 +39,11 @@ func (handler *gameHandler) Create(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, dto.BuildResponseCreate(game))
+	context.JSON(http.StatusOK, dto.BuildResponseGameCreate(game))
 }
 
 func (handler *gameHandler) RevealCell(context *gin.Context) {
-	body := dto.BodyRevealCell{}
+	body := dto.BodyGameRevealCell{}
 	context.BindJSON(&body)
 
 	game, err := handler.gamePort.Reveal(context.Param("id"), body.Row, body.Col)
@@ -52,5 +52,5 @@ func (handler *gameHandler) RevealCell(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, dto.BuildResponseRevealCell(game))
+	context.JSON(http.StatusOK, dto.BuildResponseGameRevealCell(game))
 }

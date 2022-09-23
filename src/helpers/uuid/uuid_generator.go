@@ -5,15 +5,15 @@ import (
 )
 
 type Generator interface {
-	New() string
+	NewUUID() string
 }
 
 type uuidGenerator struct{}
 
-func New() Generator {
+func NewUUID() Generator {
 	return &uuidGenerator{}
 }
 
-func (u uuidGenerator) New() string {
+func (u uuidGenerator) NewUUID() string {
 	return uuid.New().String()
 }

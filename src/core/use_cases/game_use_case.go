@@ -15,7 +15,7 @@ type GameUseCase struct {
 	uuid            uuid.Generator
 }
 
-func New(gamesRepository ports.GameRepositoryPort, uuid uuid.Generator) *GameUseCase {
+func NewGameUseCase(gamesRepository ports.GameRepositoryPort, uuid uuid.Generator) *GameUseCase {
 	return &GameUseCase{
 		gamesRepository: gamesRepository,
 		uuid:            uuid,
@@ -42,7 +42,7 @@ func (gameUseCase *GameUseCase) Create(name string, size uint, bombs uint) (doma
 		return domain.Game{}, errors.New(app_errors.InvalidInput, nil, messages.GameBombsTooHigh)
 	}
 
-	game := domain.NewGame(gameUseCase.uuid.New(), name, size, bombs)
+	game := domain.NewGame(gameUseCase.uuid.NewUUID(), name, size, bombs)
 
 	if err := gameUseCase.gamesRepository.Save(game); err != nil {
 		return domain.Game{}, errors.New(app_errors.Internal, err, messages.GameCannotBeCreatedFromRepository)

@@ -21,9 +21,9 @@ func main() {
 	{
 		games := api.Group("/games")
 		{
-			gameRepositoryPort := kvs.New()
-			gameUseCase := use_cases.New(gameRepositoryPort, uuid.New())
-			gameHandler := restful.New(gameUseCase)
+			gameRepositoryPort := kvs.NewGameKeyValueStore()
+			gameUseCase := use_cases.NewGameUseCase(gameRepositoryPort, uuid.NewUUID())
+			gameHandler := restful.NewGameHandler(gameUseCase)
 
 			games.GET(":id", gameHandler.Get)
 			games.POST("", gameHandler.Create)
@@ -32,9 +32,10 @@ func main() {
 
 		customers := api.Group("/customers")
 		{
-			customerHandler := restful.CustomerHandler{}
+			customerRepositoryPort := kvs.NewCustomerKeyValueStore()
+			customerUseCase := use_cases.NewCustomerUseCase(customerRepositoryPort, uuid.NewUUID())
+			customerHandler := restful.NewCustomerHandler(customerUseCase)
 			customers.GET(":id", customerHandler.GetCustomer)
-			customers.GET("", customerHandler.ListCustomers)
 			customers.POST("", customerHandler.CreateCustomer)
 			customers.DELETE(":id", customerHandler.DeleteCustomer)
 			customers.PATCH(":id", customerHandler.UpdateCustomer)

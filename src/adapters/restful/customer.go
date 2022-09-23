@@ -1,28 +1,66 @@
 package restful
 
 import (
+	"hexagonal/src/core/domain"
+	"hexagonal/src/core/ports"
+
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
-type CustomerHandler struct {
+type customerHandler struct {
+	customerPort ports.CustomerPort
 }
 
-func (h *CustomerHandler) GetCustomer(c *gin.Context) {
-	//Logic goes here
+func NewCustomerHandler(customerUseCase ports.CustomerPort) *customerHandler {
+	return &customerHandler{
+		customerPort: customerUseCase,
+	}
 }
 
-func (h *CustomerHandler) ListCustomers(c *gin.Context) {
-	//Logic goes here
+func (customerHandler *customerHandler) GetCustomer(context *gin.Context) {
+	customer, err := customerHandler.customerPort.Get(context.Param("id"))
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, customer)
 }
 
-func (h *CustomerHandler) CreateCustomer(c *gin.Context) {
-	//Logic goes here
+func (customerHandler *customerHandler) CreateCustomer(context *gin.Context) {
+	body := domain.Customer{}
+	context.BindJSON(&body)
+
+	customer, err := customerHandler.customerPort.Create(body.Name, body.Surname)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, customer)
 }
 
-func (h *CustomerHandler) DeleteCustomer(c *gin.Context) {
-	//Logic goes here
+func (customerHandler *customerHandler) DeleteCustomer(context *gin.Context) {
+	stataus, err := customerHandler.customerPort.Delete(context.Param("id"))
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, stataus)
 }
 
-func (h *CustomerHandler) UpdateCustomer(c *gin.Context) {
-	//Logic goes here
+func (customerHandler *customerHandler) UpdateCustomer(context *gin.Context) {
+	body := domain.Customer{}
+	context.BindJSON(&body)
+
+	stataus, err := customerHandler.customerPort.Update(body.ID, body.Name, body.Surname)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, stataus)
 }

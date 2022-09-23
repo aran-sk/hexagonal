@@ -90,7 +90,7 @@ func TestGet(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		service := use_cases.New(m.gameRepository, m.uidGen)
+		service := use_cases.NewGameUseCase(m.gameRepository, m.uidGen)
 
 		// Execute
 		result, err := service.Get(tt.args.id)
@@ -141,7 +141,7 @@ func TestCreate(t *testing.T) {
 			args: args{name: "mygame", size: 4, bombs: 2},
 			want: want{result: gameWithBombsHidden},
 			mocks: func(m mocks) {
-				m.uidGen.EXPECT().New().Return("1001")
+				m.uidGen.EXPECT().NewUUID().Return("1001")
 				m.gameRepository.EXPECT().Save(gomock.Any()).Return(nil)
 			},
 		},
@@ -150,7 +150,7 @@ func TestCreate(t *testing.T) {
 			args: args{name: "mygame", size: 4, bombs: 2},
 			want: want{err: errors.New(app_errors.Internal, nil, "create game into repository has failed")},
 			mocks: func(m mocks) {
-				m.uidGen.EXPECT().New().Return("1001")
+				m.uidGen.EXPECT().NewUUID().Return("1001")
 				m.gameRepository.EXPECT().Save(gomock.Any()).Return(errors.New(app_errors.Internal, nil, ""))
 			},
 		},
@@ -174,7 +174,7 @@ func TestCreate(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		gameUseCase := use_cases.New(m.gameRepository, m.uidGen)
+		gameUseCase := use_cases.NewGameUseCase(m.gameRepository, m.uidGen)
 
 		// Execute
 		gameResult, err := gameUseCase.Create(tt.args.name, tt.args.size, tt.args.bombs)
@@ -313,7 +313,7 @@ func TestReveal(t *testing.T) {
 		}
 
 		tt.mocks(m)
-		gameUseCase := use_cases.New(m.gameRepository, m.uidGen)
+		gameUseCase := use_cases.NewGameUseCase(m.gameRepository, m.uidGen)
 
 		// Execute
 		gameResult, err := gameUseCase.Reveal(tt.args.id, tt.args.row, tt.args.col)

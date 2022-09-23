@@ -1,8 +1,9 @@
 package mockups
 
 import (
-	"github.com/golang/mock/gomock"
 	"reflect"
+
+	"github.com/golang/mock/gomock"
 )
 
 // MockUIDGen is a mock of UIDGen interface
@@ -29,15 +30,15 @@ func (m *MockUIDGen) EXPECT() *MockUIDGenMockRecorder {
 }
 
 // New mocks base method
-func (m *MockUIDGen) New() string {
+func (m *MockUIDGen) NewUUID() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "New")
+	ret := m.ctrl.Call(m, "NewUUID")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
 // New indicates an expected call of New
-func (mr *MockUIDGenMockRecorder) New() *gomock.Call {
+func (mr *MockUIDGenMockRecorder) NewUUID() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "New", reflect.TypeOf((*MockUIDGen)(nil).New))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewUUID", reflect.TypeOf((*MockUIDGen)(nil).NewUUID))
 }

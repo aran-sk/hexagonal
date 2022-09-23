@@ -9,17 +9,17 @@ import (
 	"github.com/matiasvarela/errors"
 )
 
-type KeyValueStore struct {
+type GameKeyValueStore struct {
 	kvs map[string][]byte
 }
 
-func New() *KeyValueStore {
-	return &KeyValueStore{
+func NewGameKeyValueStore() *GameKeyValueStore {
+	return &GameKeyValueStore{
 		kvs: map[string][]byte{},
 	}
 }
 
-func (repo *KeyValueStore) Get(id string) (domain.Game, error) {
+func (repo *GameKeyValueStore) Get(id string) (domain.Game, error) {
 
 	if value, ok := repo.kvs[id]; ok {
 		game := domain.Game{}
@@ -34,7 +34,7 @@ func (repo *KeyValueStore) Get(id string) (domain.Game, error) {
 	return domain.Game{}, errors.New(app_errors.NotFound, nil, "game not found in kvs")
 }
 
-func (repo *KeyValueStore) Save(game domain.Game) error {
+func (repo *GameKeyValueStore) Save(game domain.Game) error {
 	bytes, err := json.Marshal(game)
 	if err != nil {
 		return errors.New(app_errors.InvalidInput, err, messages.GameMarshalingFailed)
