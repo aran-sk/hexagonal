@@ -6,6 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HealthCheckHandler(context *gin.Context) {
+type HealthCheckHandler struct {
+}
+
+func (h *HealthCheckHandler) HealthCheck(context *gin.Context) {
 	context.String(http.StatusOK, http.StatusText(http.StatusOK))
 }

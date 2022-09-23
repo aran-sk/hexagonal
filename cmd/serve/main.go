@@ -14,7 +14,8 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/healthcheck", restful.HealthCheckHandler)
+	healthCheckHandler := restful.HealthCheckHandler{}
+	router.GET("/healthcheck", healthCheckHandler.HealthCheck)
 
 	api := router.Group("/api")
 	{
@@ -22,11 +23,21 @@ func main() {
 		{
 			gameRepositoryPort := kvs.New()
 			gameUseCase := use_cases.New(gameRepositoryPort, uuid.New())
-			gameUsingHttp := restful.New(gameUseCase)
+			gameHandler := restful.New(gameUseCase)
 
-			games.GET(":id", gameUsingHttp.Get)
-			games.POST("", gameUsingHttp.Create)
-			games.PUT(":id", gameUsingHttp.RevealCell)
+			games.GET(":id", gameHandler.Get)
+			games.POST("", gameHandler.Create)
+			games.PUT(":id", gameHandler.RevealCell)
+		}
+
+		customers := api.Group("/customers")
+		{
+			customerHandler := restful.CustomerHandler{}
+			customers.GET(":id", customerHandler.GetCustomer)
+			customers.GET("", customerHandler.ListCustomers)
+			customers.POST("", customerHandler.CreateCustomer)
+			customers.DELETE(":id", customerHandler.DeleteCustomer)
+			customers.PATCH(":id", customerHandler.UpdateCustomer)
 		}
 	}
 

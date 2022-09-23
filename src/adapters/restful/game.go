@@ -9,17 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type restful struct {
+type gameHandler struct {
 	gamePort ports.GamePort
 }
 
-func New(gameUseCase ports.GamePort) *restful {
-	return &restful{
+func New(gameUseCase ports.GamePort) *gameHandler {
+	return &gameHandler{
 		gamePort: gameUseCase,
 	}
 }
 
-func (handler *restful) Get(context *gin.Context) {
+func (handler *gameHandler) Get(context *gin.Context) {
 	game, err := handler.gamePort.Get(context.Param("id"))
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -29,7 +29,7 @@ func (handler *restful) Get(context *gin.Context) {
 	context.JSON(http.StatusOK, game)
 }
 
-func (handler *restful) Create(context *gin.Context) {
+func (handler *gameHandler) Create(context *gin.Context) {
 	body := dto.BodyCreate{}
 	context.BindJSON(&body)
 
@@ -42,7 +42,7 @@ func (handler *restful) Create(context *gin.Context) {
 	context.JSON(http.StatusOK, dto.BuildResponseCreate(game))
 }
 
-func (handler *restful) RevealCell(context *gin.Context) {
+func (handler *gameHandler) RevealCell(context *gin.Context) {
 	body := dto.BodyRevealCell{}
 	context.BindJSON(&body)
 
