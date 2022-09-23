@@ -10,6 +10,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @title Hexagonal Architecture API
+// @version 1.0
+// @description.markdown
+// @termsOfService http://somewhere.com/
+
+// @contact.name API Support
+// @contact.url http://somewhere.com/support
+// @contact.email support@somewhere.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @schemes https http
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 
 	router := gin.Default()
@@ -35,6 +52,7 @@ func main() {
 			customerRepositoryPort := kvs.NewCustomerKeyValueStore()
 			customerUseCase := use_cases.NewCustomerUseCase(customerRepositoryPort, uuid.NewUUID())
 			customerHandler := restful.NewCustomerHandler(customerUseCase)
+
 			customers.GET(":id", customerHandler.GetCustomer)
 			customers.POST("", customerHandler.CreateCustomer)
 			customers.DELETE(":id", customerHandler.DeleteCustomer)

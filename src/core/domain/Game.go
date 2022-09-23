@@ -8,7 +8,7 @@ const (
 
 type Game struct {
 	ID            string        `json:"id"`
-	Name          string        `json:"name"`
+	Name          string        `json:"name" binding:"required" example:"Discovery" maxLength:"255"`
 	State         string        `json:"state"`
 	BoardSettings BoardSettings `json:"board_settings"`
 	Board         Board         `json:"board"`
