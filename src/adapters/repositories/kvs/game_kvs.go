@@ -20,7 +20,6 @@ func NewGameKeyValueStore() *GameKeyValueStore {
 }
 
 func (repo *GameKeyValueStore) Get(id string) (domain.Game, error) {
-
 	if value, ok := repo.kvs[id]; ok {
 		game := domain.Game{}
 		err := json.Unmarshal(value, &game)
