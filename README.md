@@ -4,7 +4,11 @@
 The application is based from a [Go article](https://medium.com/@matiasvarela?p=cfd4e436faa3).
 Changed the app with some refactorings, and to make each component easier to understand.
 
+### Ports and Adapters
 ![alt text](port_adapter_architect.png "Ports and Adapters")
+
+### Actors connected to the core ports through adapters
+![alt text](hexagonal_architect.png "Actors connected to the core ports through adapters")
 
 ## Topics:
 1. [Summary](#summary)
