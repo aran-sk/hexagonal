@@ -56,7 +56,7 @@ func main() {
 			customers.GET(":id", customerHandler.GetCustomer)
 			customers.POST("", customerHandler.CreateCustomer)
 			customers.DELETE(":id", customerHandler.DeleteCustomer)
-			customers.PATCH(":id", customerHandler.UpdateCustomer)
+			customers.PUT(":id", customerHandler.UpdateCustomer)
 		}
 	}
 
